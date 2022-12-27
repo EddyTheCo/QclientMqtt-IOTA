@@ -18,6 +18,7 @@ public:
     ResponseMqtt(QMqttSubscription * thesub);
 public slots:
     void fill(QMqttMessage msg);
+    void unsubscribe(void);
 signals:
     void returned( QJsonValue data );
 private:

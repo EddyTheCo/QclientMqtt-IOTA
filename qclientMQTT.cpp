@@ -14,7 +14,11 @@ namespace qiota{
         qDebug()<<"message recieved";
 		emit returned((QJsonDocument::fromJson(msg.payload())).object());
 	}
-
+    void ResponseMqtt::unsubscribe(void)
+    {
+        sub_->unsubscribe();
+        deleteLater();
+    }
     ClientMqtt::ClientMqtt(const QUrl &url):QMqttClient(),node_address_(url)
 	{
 
