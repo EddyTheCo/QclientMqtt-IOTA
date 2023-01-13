@@ -3,6 +3,7 @@
 
 #include <QtCore/QIODevice>
 #include <QtWebSockets/QWebSocket>
+#include<QByteArray>
 
 class WebSocketIODevice : public QIODevice
 {

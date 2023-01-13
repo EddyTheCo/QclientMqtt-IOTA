@@ -13,6 +13,7 @@ WebSocketIODevice::WebSocketIODevice(QObject *parent)
 
 bool WebSocketIODevice::open(QIODevice::OpenMode mode)
 {
+    qDebug()<<"opening socket to:"<<m_url;
     QNetworkRequest request;
     request.setUrl(m_url);
     request.setRawHeader("Sec-WebSocket-Protocol", m_protocol.constData());

@@ -4,7 +4,7 @@
  *
  **/
 
-#include<QByteArray>
+
 #include<QDebug>
 #include <QMqttClient>
 #include<QJsonValue>
@@ -30,14 +30,20 @@ private:
 class ClientMqtt: public QMqttClient
 {
 
+    Q_OBJECT
 public:
     ClientMqtt(const QUrl &url);
 
     ResponseMqtt*  get_subscription(const QString& topic);
     ResponseMqtt* get_outputs_unlock_condition_address(const QString& condition_address);
     ResponseMqtt* get_blocks(void);
+    void set_node_address(const QUrl &url){if(node_address_!=url){node_address_=url;emit node_address_changed(node_address_);}}
 
+signals:
+    void node_address_changed(QUrl);
 private:
+
+    void openDevice(const QUrl& url);
 QUrl  node_address_;
 quint16 port_;
 WebSocketIODevice m_device;
