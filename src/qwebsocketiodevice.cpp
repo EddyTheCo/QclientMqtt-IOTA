@@ -1,6 +1,7 @@
 #include "client/qwebsocketiodevice.hpp"
 
 #include <QtCore/QDebug>
+#include<QTimer>
 
 WebSocketIODevice::WebSocketIODevice(QObject *parent)
     : QIODevice(parent)
@@ -8,7 +9,14 @@ WebSocketIODevice::WebSocketIODevice(QObject *parent)
     connect(&m_socket, &QWebSocket::connected, this, &WebSocketIODevice::onSocketConnected);
     connect(&m_socket, &QWebSocket::binaryMessageReceived, this, &WebSocketIODevice::handleBinaryMessage);
     connect(&m_socket,QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::error),
-            [=](QAbstractSocket::SocketError error){qDebug()<<error;});
+            [=](QAbstractSocket::SocketError error)
+    {
+        qDebug()<<error;
+        if(error==QAbstractSocket::SocketError::HostNotFoundError)
+        {
+            QTimer::singleShot(10000,this,[=](){open();});
+        }
+    });
 }
 
 bool WebSocketIODevice::open(QIODevice::OpenMode mode)

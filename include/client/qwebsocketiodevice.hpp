@@ -11,7 +11,7 @@ class WebSocketIODevice : public QIODevice
 public:
     WebSocketIODevice(QObject *parent = nullptr);
 
-    bool open(OpenMode mode) override;
+    bool open(OpenMode mode=QIODevice::ReadWrite) override;
     void close() override;
 
     qint64 readData(char *data, qint64 maxlen) override;
