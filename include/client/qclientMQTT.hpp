@@ -37,7 +37,8 @@ public:
     ResponseMqtt*  get_subscription(const QString& topic);
     ResponseMqtt* get_outputs_unlock_condition_address(const QString& condition_address);
     ResponseMqtt* get_blocks(void);
-    void set_node_address(const QUrl &url){if(node_address_!=url){node_address_=url;emit node_address_changed(node_address_);}}
+    void set_node_address(const QUrl &url){if(node_address_!=url&&url.isValid()){
+            node_address_=url;emit node_address_changed(node_address_);}}
 
 signals:
     void node_address_changed(QUrl);

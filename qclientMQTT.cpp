@@ -45,7 +45,10 @@ ClientMqtt::ClientMqtt(const QUrl &url):QMqttClient()
         this->setTransport(&m_device, QMqttClient::IODevice);
         this->connectToHost();
     });
-    if(url.isValid())set_node_address(url);
+    if(url.isValid())
+    {
+        set_node_address(url);
+    }
 
 };
 ResponseMqtt*  ClientMqtt::get_subscription(const QString& topic)
