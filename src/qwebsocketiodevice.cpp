@@ -12,10 +12,7 @@ WebSocketIODevice::WebSocketIODevice(QObject *parent)
             [=](QAbstractSocket::SocketError error)
     {
         qDebug()<<error;
-        if(error==QAbstractSocket::SocketError::HostNotFoundError)
-        {
             QTimer::singleShot(10000,this,[=](){open();});
-        }
     });
 }
 
