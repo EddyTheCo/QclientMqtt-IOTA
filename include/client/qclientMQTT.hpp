@@ -32,7 +32,7 @@ class ClientMqtt: public QMqttClient
 
     Q_OBJECT
 public:
-    ClientMqtt(const QUrl &url);
+    ClientMqtt(void);
 
     ResponseMqtt*  get_subscription(const QString& topic);
     ResponseMqtt* get_outputs_unlock_condition_address(const QString& condition_address);

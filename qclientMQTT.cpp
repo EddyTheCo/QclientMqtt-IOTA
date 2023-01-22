@@ -26,7 +26,7 @@ void ClientMqtt::openDevice(const QUrl& url)
         qDebug() << "Could not open socket device";
 }
 
-ClientMqtt::ClientMqtt(const QUrl &url):QMqttClient()
+ClientMqtt::ClientMqtt(void):QMqttClient()
 {
 
     QObject::connect(this,&QMqttClient::stateChanged,this,[=](QMqttClient::ClientState state ){
@@ -45,10 +45,6 @@ ClientMqtt::ClientMqtt(const QUrl &url):QMqttClient()
         this->setTransport(&m_device, QMqttClient::IODevice);
         this->connectToHost();
     });
-    if(url.isValid())
-    {
-        set_node_address(url);
-    }
 
 };
 ResponseMqtt*  ClientMqtt::get_subscription(const QString& topic)
