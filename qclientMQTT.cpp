@@ -34,7 +34,7 @@ void ClientMqtt::restart(void)
 {
     qDebug()<<"restarting";
     this->disconnectFromHost();
-    m_device.close();
+    if(m_device.isOpen())m_device.close();
     openDevice();
 
 }

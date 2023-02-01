@@ -13,7 +13,6 @@ WebSocketIODevice::WebSocketIODevice(QObject *parent)
             [=](QAbstractSocket::SocketError error)
     {
         qDebug()<<"error websocket:"<<error;
-        this->close();
     });
 }
 
