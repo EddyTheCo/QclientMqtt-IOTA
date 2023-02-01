@@ -39,13 +39,13 @@ public:
     ResponseMqtt* get_outputs_nft_nftid(const QString& nftid);
     ResponseMqtt* get_blocks(void);
     void set_node_address(const QUrl &url){if(node_address_!=url&&url.isValid()){
-            node_address_=url;emit node_address_changed(node_address_);}}
+            node_address_=url;emit node_address_changed();}}
 
 signals:
-    void node_address_changed(QUrl);
+    void node_address_changed();
 private:
-
-    void openDevice(const QUrl& url);
+    void restart(void);
+    void openDevice();
 QUrl  node_address_;
 quint16 port_;
 WebSocketIODevice m_device;

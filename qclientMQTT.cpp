@@ -19,7 +19,7 @@ void ResponseMqtt::unsubscribe(void)
     sub_->unsubscribe();
     deleteLater();
 }
-void ClientMqtt::openDevice(const QUrl& url)
+void ClientMqtt::openDevice()
 {
     m_device.setUrl(node_address_);
     if (!m_device.open(QIODevice::ReadWrite))
@@ -31,22 +31,31 @@ ClientMqtt::ClientMqtt(void):QMqttClient()
 
     QObject::connect(this,&QMqttClient::stateChanged,this,[=](QMqttClient::ClientState state ){
         qDebug()<<"state:"<<state;
-        if(state==QMqttClient::Disconnected)
-        {
-            this->openDevice(this->node_address_);
-        }
     });
 
     QObject::connect(this,&QMqttClient::errorChanged,this,[=](QMqttClient::ClientError error ){
-        qDebug()<<"error:"<<error;
+        qDebug()<<"errormqttt:"<<error;
+        this->restart();
     });
-    connect(this,&ClientMqtt::node_address_changed,this,&ClientMqtt::openDevice);
+    QObject::connect(&m_device, &WebSocketIODevice::errorFound,this,[=](){
+       this->restart();
+    });
+    connect(this,&ClientMqtt::node_address_changed,this,[=](){
+        this->restart();
+    });
     connect(&m_device, &WebSocketIODevice::socketConnected, this, [this]() {
         this->setTransport(&m_device, QMqttClient::IODevice);
         this->connectToHost();
     });
 
 };
+void ClientMqtt::restart(void)
+{
+    if(m_device.isOpen())m_device.close();
+    if(this->Connected)this->disconnectFromHost();
+    openDevice();
+
+}
 ResponseMqtt*  ClientMqtt::get_subscription(const QString& topic)
 {
 
