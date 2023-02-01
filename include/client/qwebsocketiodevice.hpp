@@ -21,7 +21,7 @@ public:
     void setProtocol(const QByteArray &data);
 Q_SIGNALS:
     void socketConnected();
-
+    void errorFound();
 public slots:
     void handleBinaryMessage(const QByteArray &msg);
     void onSocketConnected();
