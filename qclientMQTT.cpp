@@ -2,7 +2,7 @@
 #include<QJsonDocument>
 #include<QJsonObject>
 #include<QJsonValue>
-#include<iostream>
+#include<QTimer>
 namespace qiota{
 
 ResponseMqtt::ResponseMqtt(QMqttSubscription * thesub):sub_(thesub)
@@ -21,11 +21,23 @@ void ResponseMqtt::unsubscribe(void)
 }
 void ClientMqtt::openDevice()
 {
+    qDebug()<<"opening device";
     m_device.setUrl(node_address_);
     if (!m_device.open(QIODevice::ReadWrite))
+    {
         qDebug() << "Could not open socket device";
-}
+    }
+    QTimer::singleShot(10000,this,[&](){if(!m_device.isOpen())this->restart();});
 
+}
+void ClientMqtt::restart(void)
+{
+    qDebug()<<"restarting";
+    this->disconnectFromHost();
+    m_device.close();
+    openDevice();
+
+}
 ClientMqtt::ClientMqtt(void):QMqttClient()
 {
 
@@ -37,9 +49,6 @@ ClientMqtt::ClientMqtt(void):QMqttClient()
         qDebug()<<"errormqttt:"<<error;
         this->restart();
     });
-    QObject::connect(&m_device, &WebSocketIODevice::errorFound,this,[=](){
-       this->restart();
-    });
     connect(this,&ClientMqtt::node_address_changed,this,[=](){
         this->restart();
     });
@@ -49,16 +58,9 @@ ClientMqtt::ClientMqtt(void):QMqttClient()
     });
 
 };
-void ClientMqtt::restart(void)
-{
-    if(m_device.isOpen())m_device.close();
-    if(this->Connected)this->disconnectFromHost();
-    openDevice();
 
-}
 ResponseMqtt*  ClientMqtt::get_subscription(const QString& topic)
 {
-
     auto var=subscribe(QMqttTopicFilter(topic));
     return new ResponseMqtt(var);
 }
