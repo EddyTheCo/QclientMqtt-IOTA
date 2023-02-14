@@ -73,6 +73,10 @@ ResponseMqtt* ClientMqtt::get_outputs_nft_nftid(const QString& nftid)
 {
     return get_subscription("outputs/nft/"+nftid);
 }
+ResponseMqtt* ClientMqtt::get_outputs_outputId(const QString& id)
+{
+    return get_subscription("outputs/"+id);
+}
 ResponseMqtt* ClientMqtt::get_blocks(void)
 {
     return get_subscription("blocks");
