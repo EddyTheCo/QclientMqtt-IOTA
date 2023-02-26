@@ -22,24 +22,25 @@ void ResponseMqtt::unsubscribe(void)
 void ClientMqtt::openDevice()
 {
     qDebug()<<"opening device";
-    m_device.setUrl(node_address_);
-    if (!m_device.open(QIODevice::ReadWrite))
+    m_device->setUrl(node_address_);
+    if (!m_device->open(QIODevice::ReadWrite))
     {
         qDebug() << "Could not open socket device";
     }
-    QTimer::singleShot(10000,this,[&](){if(!m_device.isOpen())this->restart();});
+    QTimer::singleShot(10000,this,[&](){if(!m_device->isOpen())this->restart();});
 
 }
 void ClientMqtt::restart(void)
 {
     qDebug()<<"restarting";
     this->disconnectFromHost();
-    if(m_device.isOpen())m_device.close();
+    if(m_device->isOpen())m_device->close();
     openDevice();
 
 }
-ClientMqtt::ClientMqtt(void):QMqttClient()
+ClientMqtt::ClientMqtt(QObject *parent):QMqttClient(),m_device(new WebSocketIODevice(this))
 {
+    this->setParent(parent);
 
     QObject::connect(this,&QMqttClient::stateChanged,this,[=](QMqttClient::ClientState state ){
         qDebug()<<"state:"<<state;
@@ -52,8 +53,8 @@ ClientMqtt::ClientMqtt(void):QMqttClient()
     connect(this,&ClientMqtt::node_address_changed,this,[=](){
         this->restart();
     });
-    connect(&m_device, &WebSocketIODevice::socketConnected, this, [this]() {
-        this->setTransport(&m_device, QMqttClient::IODevice);
+    connect(m_device, &WebSocketIODevice::socketConnected, this, [this]() {
+        this->setTransport(m_device, QMqttClient::IODevice);
         this->connectToHost();
     });
 

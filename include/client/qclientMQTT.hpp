@@ -32,7 +32,7 @@ class ClientMqtt: public QMqttClient
 
     Q_OBJECT
 public:
-    ClientMqtt(void);
+    ClientMqtt(QObject *parent = nullptr);
 
     ResponseMqtt*  get_subscription(const QString& topic);
     ResponseMqtt* get_outputs_unlock_condition_address(const QString& condition_address);
@@ -49,7 +49,7 @@ private:
     void openDevice();
 QUrl  node_address_;
 quint16 port_;
-WebSocketIODevice m_device;
+WebSocketIODevice* m_device;
 };
 
 };
