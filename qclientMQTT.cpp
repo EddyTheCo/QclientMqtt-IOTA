@@ -38,9 +38,8 @@ void ClientMqtt::restart(void)
     openDevice();
 
 }
-ClientMqtt::ClientMqtt(QObject *parent):QMqttClient(),m_device(new WebSocketIODevice(this))
+ClientMqtt::ClientMqtt(QObject *parent):QMqttClient(parent),m_device(new WebSocketIODevice(this))
 {
-    this->setParent(parent);
 
     QObject::connect(this,&QMqttClient::stateChanged,this,[=](QMqttClient::ClientState state ){
         qDebug()<<"state:"<<state;
