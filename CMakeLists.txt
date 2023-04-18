@@ -18,7 +18,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 
 add_library(qclientMQTT include/client/qclientMQTT.hpp qclientMQTT.cpp src/qwebsocketiodevice.cpp include/client/qwebsocketiodevice.hpp)
+include(FetchContent)
+FetchContent_Declare(
+        qblock
+        GIT_REPOSITORY git@github.com:EddyTheCo/Qblock-IOTA.git
+        GIT_TAG main
+        )
+FetchContent_MakeAvailable(qblock)
 
+target_link_libraries(qclientMQTT PUBLIC qblock)
 find_package(Qt6 REQUIRED COMPONENTS Core Mqtt WebSockets)
 target_link_libraries(qclientMQTT PUBLIC  Qt6::Core Qt6::Mqtt )
 target_link_libraries(qclientMQTT PRIVATE  Qt6::WebSockets)
