@@ -69,10 +69,6 @@ ResponseMqtt* ClientMqtt::get_outputs_unlock_condition_address(const QString& co
 {
     return get_subscription("outputs/unlock/"+condition_address);
 }
-ResponseMqtt* ClientMqtt::get_outputs_nft_nftid(const QString& nftid)
-{
-    return get_subscription("outputs/nft/"+nftid);
-}
 ResponseMqtt* ClientMqtt::get_outputs_outputId(const QString& id)
 {
     return get_subscription("outputs/"+id);

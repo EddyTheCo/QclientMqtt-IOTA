@@ -9,6 +9,8 @@
 #include <QMqttClient>
 #include<QJsonValue>
 #include "client/qwebsocketiodevice.hpp"
+#include"block/qblock.hpp"
+
 namespace qiota{
 
 class ResponseMqtt: public QObject
@@ -34,9 +36,14 @@ class ClientMqtt: public QMqttClient
 public:
     ClientMqtt(QObject *parent = nullptr);
 
-    ResponseMqtt*  get_subscription(const QString& topic);
+    ResponseMqtt* get_subscription(const QString& topic);
     ResponseMqtt* get_outputs_unlock_condition_address(const QString& condition_address);
-    ResponseMqtt* get_outputs_nft_nftid(const QString& nftid);
+
+    template<qblocks::Output::types outtype>
+    ResponseMqtt* get_outputs_by_chain_id(const QString& id)
+    {
+        return get_subscription("outputs/"+qblocks::Output::typesstr[outtype]+"/"+id);
+    }
     ResponseMqtt* get_outputs_outputId(const QString& outid);
     ResponseMqtt* get_blocks(void);
     void set_node_address(const QUrl &url){if(node_address_!=url&&url.isValid()){
