@@ -1,8 +1,20 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 include(local_conf.cmake OPTIONAL)
-project(QtIotaClient VERSION 0.1 DESCRIPTION "IOTA-QT client library" LANGUAGES CXX)
 
-set(CMAKE_AUTOMOC ON)
+include(FetchContent)
+FetchContent_Declare(
+	ccommon
+	GIT_REPOSITORY https://github.com/EddyTheCo/Common.git
+	GIT_TAG main 
+	)
+FetchContent_MakeAvailable(ccommon)
+version_from_git(
+	LOG       OFF
+	TIMESTAMP "%Y%m%d%H%M%S"
+	)
+
+project(QtIotaClient VERSION ${VERSION} DESCRIPTION "IOTA-QT client library for MQTT comunication" LANGUAGES CXX)
+
 set(default_build_type "Release")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 	message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
@@ -14,22 +26,45 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+
+find_package(Qt6 COMPONENTS Core  WebSockets OPTIONAL_COMPONENTS Mqtt)
+
+
+if (Qt6_FOUND)
+	qt_standard_project_setup()
+	if(NOT TARGET Qt6::Mqtt)
+		include(FetchContent)
+		FetchContent_Declare(
+			qtmqtt
+			GIT_REPOSITORY git://code.qt.io/qt/qtmqtt.git
+			GIT_TAG 6.5.0 
+			)
+		FetchContent_MakeAvailable(qtmqtt)
+	endif()
+endif(Qt6_FOUND)
 
 add_library(qclientMQTT include/client/qclientMQTT.hpp qclientMQTT.cpp src/qwebsocketiodevice.cpp include/client/qwebsocketiodevice.hpp)
-include(FetchContent)
-FetchContent_Declare(
-        qblock
-        GIT_REPOSITORY git@github.com:EddyTheCo/Qblock-IOTA.git
-        GIT_TAG v0.0.1
-        )
-FetchContent_MakeAvailable(qblock)
+
+find_package(qblock 0 QUIET )
+if(NOT qblock_FOUND AND NOT TARGET qblock)
+	FetchContent_Declare(
+		qblock
+		GIT_REPOSITORY https://github.com/EddyTheCo/Qblock-IOTA.git
+		GIT_TAG v0.0.1
+		)
+	FetchContent_MakeAvailable(qblock)
+endif(NOT qblock_FOUND AND NOT TARGET qblock)
 
 target_link_libraries(qclientMQTT PUBLIC qblock)
-find_package(Qt6 REQUIRED COMPONENTS Core Mqtt WebSockets)
-target_link_libraries(qclientMQTT PUBLIC  Qt6::Core Qt6::Mqtt )
-target_link_libraries(qclientMQTT PRIVATE  Qt6::WebSockets)
+if (Qt6_FOUND)
+	target_link_libraries(qclientMQTT PUBLIC  Qt6::Core Qt6::Mqtt )
+	target_link_libraries(qclientMQTT PRIVATE  Qt6::WebSockets)
+endif(Qt6_FOUND)
 
 target_include_directories(qclientMQTT PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	"$<INSTALL_INTERFACE:include>")
@@ -51,8 +86,8 @@ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
 	)
 write_basic_package_version_file(
 	"${CMAKE_CURRENT_BINARY_DIR}/qclientMQTTConfigVersion.cmake"
-	VERSION "0.1.1.0"
-	COMPATIBILITY AnyNewerVersion
+	VERSION ${VERSION}
+	COMPATIBILITY SameMajorVersion
 	)
 install(FILES
 	${CMAKE_CURRENT_BINARY_DIR}/qclientMQTTConfig.cmake
@@ -64,8 +99,17 @@ export(EXPORT qclientMQTTTargets
 	)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    include(CTest)
+	include(CTest)
+	set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-v${SEMVER}-${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_VERSION}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}")
+	if(NOT BUILD_SHARED_LIBS)
+		set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-static")
+	endif(NOT BUILD_SHARED_LIBS)
+	include(CPack)
 endif()
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-    add_subdirectory(tests)
+#if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+#	add_subdirectory(tests)
+#endif()
+if(BUILD_DOCS)
+	get_target_property(build_docs cmake_build_docs SOURCES)
+	include(${build_docs})
 endif()
