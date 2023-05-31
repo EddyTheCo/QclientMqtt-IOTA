@@ -42,7 +42,7 @@ if (Qt6_FOUND)
 		FetchContent_Declare(
 			qtmqtt
 			GIT_REPOSITORY git://code.qt.io/qt/qtmqtt.git
-			GIT_TAG 6.5.0
+			GIT_TAG ${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH} 
 			)
 		FetchContent_MakeAvailable(qtmqtt)
 	endif()
