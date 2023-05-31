@@ -32,7 +32,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 
-find_package(Qt6 COMPONENTS Core Mqtt WebSockets)
+find_package(Qt6 COMPONENTS Core  WebSockets OPTIONAL_COMPONENTS Mqtt)
 
 
 if (Qt6_FOUND)
