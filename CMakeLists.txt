@@ -36,13 +36,14 @@ find_package(Qt6 COMPONENTS Core  WebSockets OPTIONAL_COMPONENTS Mqtt)
 
 
 if (Qt6_FOUND)
+	message(STATUS "Qt version found: ${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}")
 	qt_standard_project_setup()
 	if(NOT TARGET Qt6::Mqtt)
 		include(FetchContent)
 		FetchContent_Declare(
 			qtmqtt
 			GIT_REPOSITORY git://code.qt.io/qt/qtmqtt.git
-			GIT_TAG ${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH} 
+			GIT_TAG "${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}" 
 			)
 		FetchContent_MakeAvailable(qtmqtt)
 	endif()
