@@ -32,13 +32,20 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 
-find_package(Qt6 COMPONENTS Core  WebSockets OPTIONAL_COMPONENTS Mqtt)
+find_package(Qt6 COMPONENTS Core  OPTIONAL_COMPONENTS WebSockets Mqtt)
 
 
 if (Qt6_FOUND)
 	qt_standard_project_setup()
+	if(NOT TARGET Qt6::WebSockets)
+		FetchContent_Declare(
+			qtwebsockets
+			GIT_REPOSITORY git://code.qt.io/qt/qtwebsockets.git
+			GIT_TAG 6.5.0 
+			)
+		FetchContent_MakeAvailable(qtwebsockets)
+	endif()
 	if(NOT TARGET Qt6::Mqtt)
-		include(FetchContent)
 		FetchContent_Declare(
 			qtmqtt
 			GIT_REPOSITORY git://code.qt.io/qt/qtmqtt.git
