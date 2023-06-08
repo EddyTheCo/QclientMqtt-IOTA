@@ -28,7 +28,7 @@ class QCMQTT_EXPORT WebSocketIODevice : public QIODevice
 		void setProtocol(const QByteArray &data);
 		signals:
 		void socketConnected();
-
+		public slots:
 		void handleBinaryMessage(const QByteArray &msg);
 		void onSocketConnected();
 
