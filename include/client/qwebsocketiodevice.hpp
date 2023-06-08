@@ -12,7 +12,7 @@
 #define QCMQTT_EXPORT Q_DECL_IMPORT
 #endif
 
-class QCMQTT WebSocketIODevice : public QIODevice
+class QCMQTT_EXPORT WebSocketIODevice : public QIODevice
 {
 	Q_OBJECT
 	public:

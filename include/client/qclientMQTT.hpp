@@ -13,7 +13,7 @@
 
 namespace qiota{
 
-	class QCMQTT ResponseMqtt: public QObject
+	class QCMQTT_EXPORT ResponseMqtt: public QObject
 	{
 		Q_OBJECT
 		public:
@@ -29,7 +29,7 @@ namespace qiota{
 	};
 
 
-	class QCMQTT ClientMqtt: public QMqttClient
+	class QCMQTT_EXPORT ClientMqtt: public QMqttClient
 	{
 
 		Q_OBJECT
