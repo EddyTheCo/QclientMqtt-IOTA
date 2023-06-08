@@ -5,7 +5,7 @@ include(FetchContent)
 FetchContent_Declare(
 	ccommon
 	GIT_REPOSITORY https://github.com/EddyTheCo/Common.git
-	GIT_TAG main 
+	GIT_TAG main
 	)
 FetchContent_MakeAvailable(ccommon)
 version_from_git(
@@ -32,7 +32,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 
-find_package(Qt6 COMPONENTS Core  OPTIONAL_COMPONENTS WebSockets Mqtt)
+find_package(Qt6 COMPONENTS Core OPTIONAL_COMPONENTS WebSockets Mqtt)
 
 
 if (Qt6_FOUND)
@@ -41,7 +41,7 @@ if (Qt6_FOUND)
 		FetchContent_Declare(
 			qtwebsockets
 			GIT_REPOSITORY git://code.qt.io/qt/qtwebsockets.git
-			GIT_TAG 6.5.0 
+			GIT_TAG 6.5.0
 			)
 		FetchContent_MakeAvailable(qtwebsockets)
 	endif()
@@ -49,23 +49,23 @@ if (Qt6_FOUND)
 		FetchContent_Declare(
 			qtmqtt
 			GIT_REPOSITORY git://code.qt.io/qt/qtmqtt.git
-			GIT_TAG 6.5.0 
+			GIT_TAG 6.5.0
 			)
 		FetchContent_MakeAvailable(qtmqtt)
 	endif()
+
 endif(Qt6_FOUND)
 
 add_library(qclientMQTT include/client/qclientMQTT.hpp qclientMQTT.cpp src/qwebsocketiodevice.cpp include/client/qwebsocketiodevice.hpp)
 
-find_package(qblock 0 QUIET )
-if(NOT qblock_FOUND AND NOT TARGET qblock)
-	FetchContent_Declare(
-		qblock
-		GIT_REPOSITORY https://github.com/EddyTheCo/Qblock-IOTA.git
-		GIT_TAG v0.0.1
-		)
-	FetchContent_MakeAvailable(qblock)
-endif(NOT qblock_FOUND AND NOT TARGET qblock)
+target_compile_definitions(qclientMQTT PRIVATE WINDOWS_QCMQTT)
+FetchContent_Declare(
+	qblock
+	GIT_REPOSITORY https://github.com/EddyTheCo/Qblock-IOTA.git
+	GIT_TAG v0.1.2
+	FIND_PACKAGE_ARGS 0 CONFIG
+	)
+FetchContent_MakeAvailable(qblock)
 
 target_link_libraries(qclientMQTT PUBLIC qblock)
 if (Qt6_FOUND)
