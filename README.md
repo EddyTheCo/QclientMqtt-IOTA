@@ -6,7 +6,7 @@ Implements a library that creates a client to communicate with the IOTA nodes ac
 
 ## API reference
 
-You can read the [API reference](QclientMqtt-IOTA), or generate it yourself like
+You can read the [API reference](https://eddytheco.github.io/QclientMqtt-IOTA/), or generate it yourself like
 ```
 cmake -DBUILD_DOCS=ON ../
 cmake --build . --target doxygen_docs
