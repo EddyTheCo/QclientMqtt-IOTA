@@ -11,7 +11,6 @@ ResponseMqtt::ResponseMqtt(QMqttSubscription * thesub):sub_(thesub)
 }
 void ResponseMqtt::fill(QMqttMessage msg)
 {
-    qDebug()<<"message recieved";
     emit returned((QJsonDocument::fromJson(msg.payload())).object());
 }
 void ResponseMqtt::unsubscribe(void)
@@ -21,7 +20,6 @@ void ResponseMqtt::unsubscribe(void)
 }
 void ClientMqtt::openDevice()
 {
-    qDebug()<<"opening device";
     m_device->setUrl(node_address_);
     if (!m_device->open(QIODevice::ReadWrite))
     {
@@ -32,7 +30,6 @@ void ClientMqtt::openDevice()
 }
 void ClientMqtt::restart(void)
 {
-    qDebug()<<"Restarting Mqtt conection";
     this->disconnectFromHost();
     if(m_device->isOpen())m_device->close();
     openDevice();
