@@ -46,8 +46,19 @@ namespace qiota{
 				}
 			ResponseMqtt* get_outputs_outputId(const QString& outid);
 			ResponseMqtt* get_blocks(void);
-			void set_node_address(const QUrl &url){if(node_address_!=url&&url.isValid()){
-				node_address_=url;emit node_address_changed();}}
+            void set_node_address(const QUrl &url){
+                   auto node_addr_wss_=url;
+                if(url.scheme()!="wss")
+                {
+                    node_addr_wss_.setScheme("wss");
+                    node_addr_wss_.setPort(443);
+                    node_addr_wss_.setPath("/api/mqtt/v1");
+                }
+                if(node_address_!=node_addr_wss_&&node_addr_wss_.isValid())
+                {
+                    node_address_=node_addr_wss_;emit node_address_changed();
+                }
+            }
 
 		signals:
 			void node_address_changed();
