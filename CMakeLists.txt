@@ -41,7 +41,7 @@ if (Qt6_FOUND)
         FetchContent_Declare(
             qtwebsockets
             GIT_REPOSITORY git://code.qt.io/qt/qtwebsockets.git
-            GIT_TAG 6.5.0
+            GIT_TAG 6.6.0
         )
     FetchContent_MakeAvailable(qtwebsockets)
 endif()
@@ -49,7 +49,7 @@ if(NOT TARGET Qt6::Mqtt)
     FetchContent_Declare(
         qtmqtt
         GIT_REPOSITORY git://code.qt.io/qt/qtmqtt.git
-        GIT_TAG 6.5.0
+        GIT_TAG 6.6.0
     )
 FetchContent_MakeAvailable(qtmqtt)
 endif()
