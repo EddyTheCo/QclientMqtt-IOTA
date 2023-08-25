@@ -49,7 +49,7 @@ if(NOT TARGET Qt6::Mqtt)
     FetchContent_Declare(
         qtmqtt
         GIT_REPOSITORY git://code.qt.io/qt/qtmqtt.git
-        GIT_TAG dev
+        GIT_TAG v6.6.0-beta3
     )
 FetchContent_MakeAvailable(qtmqtt)
 endif()
