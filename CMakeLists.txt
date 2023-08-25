@@ -62,7 +62,7 @@ target_compile_definitions(qclientMQTT PRIVATE WINDOWS_QCMQTT)
 FetchContent_Declare(
     qblock
     GIT_REPOSITORY https://github.com/EddyTheCo/Qblock-IOTA.git
-    GIT_TAG v0.2.1
+    GIT_TAG v0.2.2
     FIND_PACKAGE_ARGS 0 CONFIG
 )
 FetchContent_MakeAvailable(qblock)

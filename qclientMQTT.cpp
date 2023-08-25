@@ -37,11 +37,6 @@ void ClientMqtt::restart(void)
 }
 ClientMqtt::ClientMqtt(QObject *parent):QMqttClient(parent),m_device(new WebSocketIODevice(this))
 {
-
-    QObject::connect(this,&QMqttClient::stateChanged,this,[=](QMqttClient::ClientState state ){
-        qDebug()<<"state:"<<state;
-    });
-
     QObject::connect(this,&QMqttClient::errorChanged,this,[=](QMqttClient::ClientError error ){
         qDebug()<<"errormqttt:"<<error;
         this->restart();
