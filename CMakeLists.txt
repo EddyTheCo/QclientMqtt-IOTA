@@ -51,7 +51,7 @@ if(NOT TARGET Qt6::Mqtt)
         GIT_REPOSITORY git://code.qt.io/qt/qtmqtt.git
         GIT_TAG v6.5.0
     )
-set(QT_WILL_INSTALL OFF)
+set(CMAKE_INSTALL_COMPONENT "Unspecified")
 FetchContent_MakeAvailable(qtmqtt)
 endif()
 
