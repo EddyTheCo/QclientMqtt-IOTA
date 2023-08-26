@@ -51,7 +51,6 @@ if(NOT TARGET Qt6::Mqtt)
         GIT_REPOSITORY git://code.qt.io/qt/qtmqtt.git
         GIT_TAG v6.5.0
     )
-set(CMAKE_INSTALL_COMPONENT "Unspecified")
 FetchContent_MakeAvailable(qtmqtt)
 endif()
 
@@ -108,6 +107,8 @@ export(EXPORT qclientMQTTTargets
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
+    get_cmake_property(CPACK_COMPONENTS_ALL COMPONENTS)
+list(REMOVE_ITEM CPACK_COMPONENTS_ALL "_install_html_docs_Mqtt")
     set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-v${SEMVER}-${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_VERSION}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}")
     if(NOT BUILD_SHARED_LIBS)
         set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-static")
