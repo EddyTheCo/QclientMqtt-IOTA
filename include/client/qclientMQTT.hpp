@@ -17,7 +17,7 @@ namespace qiota{
 	{
 		Q_OBJECT
 		public:
-			ResponseMqtt(QMqttSubscription * thesub);
+            ResponseMqtt(QMqttSubscription * thesub,QObject *parent);
 			public slots:
 				void fill(QMqttMessage msg);
 			void unsubscribe(void);
