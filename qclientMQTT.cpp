@@ -20,7 +20,7 @@ void ResponseMqtt::unsubscribe(void)
 }
 void ClientMqtt::openDevice()
 {
-    m_device->setUrl(node_address_);
+    m_device->setUrl(m_nodeAddress);
     if (!m_device->open(QIODevice::ReadWrite))
     {
         qDebug() << "Could not open socket device";
@@ -41,7 +41,7 @@ ClientMqtt::ClientMqtt(QObject *parent):QMqttClient(parent),m_device(new WebSock
         qDebug()<<"errormqttt:"<<error;
         this->restart();
     });
-    connect(this,&ClientMqtt::node_address_changed,this,[this](){
+    connect(this,&ClientMqtt::nodeAddressChanged,this,[this](){
         this->restart();
     });
     connect(m_device, &WebSocketIODevice::socketConnected, this, [this]() {

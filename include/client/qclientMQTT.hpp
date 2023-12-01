@@ -46,26 +46,26 @@ namespace qiota{
 				}
 			ResponseMqtt* get_outputs_outputId(const QString& outid);
 			ResponseMqtt* get_blocks(void);
-            void set_node_address(const QUrl &url){
-                   auto node_addr_wss_=url;
+            void setNodeAddress(const QUrl &url){
+                   auto nodeAddrWss=url;
                 if(url.scheme()!="wss")
                 {
-                    node_addr_wss_.setScheme("wss");
-                    node_addr_wss_.setPort(443);
-                    node_addr_wss_.setPath("/api/mqtt/v1");
+                    nodeAddrWss.setScheme("wss");
+                    nodeAddrWss.setPort(443);
+                    nodeAddrWss.setPath("/api/mqtt/v1");
                 }
-                if(node_address_!=node_addr_wss_&&node_addr_wss_.isValid())
+                if(m_nodeAddress!=nodeAddrWss&&nodeAddrWss.isValid())
                 {
-                    node_address_=node_addr_wss_;emit node_address_changed();
+                    m_nodeAddress=nodeAddrWss;emit nodeAddressChanged();
                 }
             }
 
 		signals:
-			void node_address_changed();
+            void nodeAddressChanged();
 		private:
 			void restart(void);
 			void openDevice();
-			QUrl  node_address_;
+            QUrl  m_nodeAddress;
 			quint16 port_;
 			WebSocketIODevice* m_device;
 	};
