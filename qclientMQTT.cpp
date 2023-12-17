@@ -37,14 +37,14 @@ void ClientMqtt::restart(void)
 }
 ClientMqtt::ClientMqtt(QObject *parent):QMqttClient(parent),m_device(new WebSocketIODevice(this))
 {
-    QObject::connect(this,&QMqttClient::errorChanged,this,[this](QMqttClient::ClientError error ){
+    QObject::connect(this,&QMqttClient::errorChanged,this,[=](QMqttClient::ClientError error ){
         qDebug()<<"errormqttt:"<<error;
         this->restart();
     });
-    connect(this,&ClientMqtt::nodeAddressChanged,this,[this](){
+    connect(this,&ClientMqtt::nodeAddressChanged,this,[=](){
         this->restart();
     });
-    connect(m_device, &WebSocketIODevice::socketConnected, this, [this]() {
+    connect(m_device, &WebSocketIODevice::socketConnected, this, [=]() {
         this->setTransport(m_device, QMqttClient::IODevice);
         this->connectToHost();
     });
