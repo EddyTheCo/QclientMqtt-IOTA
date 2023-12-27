@@ -5,7 +5,7 @@
 #include<QTimer>
 namespace qiota{
 
-ResponseMqtt::ResponseMqtt(QMqttSubscription * thesub):sub_(thesub)
+ResponseMqtt::ResponseMqtt(QMqttSubscription * thesub,QObject *parent):QObject(parent),sub_(thesub)
 {
     QObject::connect(sub_,&QMqttSubscription::messageReceived ,this, &ResponseMqtt::fill);
 }
@@ -20,7 +20,7 @@ void ResponseMqtt::unsubscribe(void)
 }
 void ClientMqtt::openDevice()
 {
-    m_device->setUrl(node_address_);
+    m_device->setUrl(m_nodeAddress);
     if (!m_device->open(QIODevice::ReadWrite))
     {
         qDebug() << "Could not open socket device";
@@ -41,10 +41,10 @@ ClientMqtt::ClientMqtt(QObject *parent):QMqttClient(parent),m_device(new WebSock
         qDebug()<<"errormqttt:"<<error;
         this->restart();
     });
-    connect(this,&ClientMqtt::node_address_changed,this,[=](){
+    connect(this,&ClientMqtt::nodeAddressChanged,this,[=](){
         this->restart();
     });
-    connect(m_device, &WebSocketIODevice::socketConnected, this, [this]() {
+    connect(m_device, &WebSocketIODevice::socketConnected, this, [=]() {
         this->setTransport(m_device, QMqttClient::IODevice);
         this->connectToHost();
     });
@@ -53,8 +53,7 @@ ClientMqtt::ClientMqtt(QObject *parent):QMqttClient(parent),m_device(new WebSock
 
 ResponseMqtt*  ClientMqtt::get_subscription(const QString& topic)
 {
-    auto var=subscribe(QMqttTopicFilter(topic));
-    return new ResponseMqtt(var);
+    return new ResponseMqtt(subscribe(QMqttTopicFilter(topic)),this);
 }
 
 ResponseMqtt* ClientMqtt::get_outputs_unlock_condition_address(const QString& condition_address)
