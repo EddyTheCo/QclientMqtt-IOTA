@@ -4,4 +4,4 @@ find_dependency(Qt6 REQUIRED COMPONENTS Core OPTIONAL_COMPONENTS Mqtt WebSockets
 find_dependency(Qt6Mqtt CONFIG)
 find_dependency(Qt6WebSockets CONFIG)
 find_dependency(qblock 0.3 REQUIRED  CONFIG)
-include ( "${CMAKE_CURRENT_LIST_DIR}/qclientMQTTTargets.cmake" )
+include ( "${CMAKE_CURRENT_LIST_DIR}/IotaMqttClient-config.cmake" )
