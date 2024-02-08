@@ -18,7 +18,6 @@ jobs:
       contents: write
     with:
       os: ${{ matrix.os }}
-      sharedLib: ${{ matrix.sharedLib }}
       qtModules: 'qtwebsockets'
       qtVersion: '6.6.0'
   release:
