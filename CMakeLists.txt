@@ -5,7 +5,7 @@ include(FetchContent)
 FetchContent_Declare(
 	ccommon
 	GIT_REPOSITORY https://github.com/EddyTheCo/Common.git
-	GIT_TAG v0.2.0
+	GIT_TAG use_IFW
 	)
 FetchContent_MakeAvailable(ccommon)
 version_from_git(
@@ -23,12 +23,12 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 include(GNUInstallDirs)
 
 FetchContent_Declare(
-	qblock
+	QtIotaBlock	
 	GIT_REPOSITORY https://github.com/EddyTheCo/Qblock-IOTA.git
-	GIT_TAG v0.3.2
+	GIT_TAG use_IFW
 	FIND_PACKAGE_ARGS 0.3 CONFIG
 	)
-FetchContent_MakeAvailable(qblock)
+FetchContent_MakeAvailable(QtIotaBlock)
 
 find_package(Qt6 COMPONENTS Core OPTIONAL_COMPONENTS WebSockets Mqtt)
 
@@ -53,26 +53,27 @@ if (Qt6_FOUND)
 	endif()
 
 
-	add_library(clientMQTT include/client/qclientMQTT.hpp qclientMQTT.cpp src/qwebsocketiodevice.cpp include/client/qwebsocketiodevice.hpp)
-	add_library(${PROJECT_NAME}::clientMQTT ALIAS clientMQTT)
+	add_library(qclientMQTT include/client/qclientMQTT.hpp qclientMQTT.cpp src/qwebsocketiodevice.cpp include/client/qwebsocketiodevice.hpp)
+	add_library(${PROJECT_NAME}::qclientMQTT ALIAS qclientMQTT)
+	set_target_properties(qclientMQTT PROPERTIES VERSION ${VERSION} SOVERSION ${VERSION_MAJOR})
 
-	target_compile_definitions(clientMQTT PRIVATE WINDOWS_QCMQTT)
+	target_compile_definitions(qclientMQTT PRIVATE WINDOWS_QCMQTT)
 
 
-	target_link_libraries(clientMQTT PUBLIC qblock)
-	target_link_libraries(clientMQTT PUBLIC  Qt6::Core Qt6::Mqtt )
-	target_link_libraries(clientMQTT PRIVATE  Qt6::WebSockets)
+	target_link_libraries(qclientMQTT PUBLIC QtIotaBlock::qblock)
+	target_link_libraries(qclientMQTT PUBLIC  Qt6::Core Qt6::Mqtt )
+	target_link_libraries(qclientMQTT PRIVATE  Qt6::WebSockets)
 
-	target_include_directories(clientMQTT PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-		"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Esterv/${PROJECT_NAME}>")
+	target_include_directories(qclientMQTT PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+		"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Esterv/>")
 
-	install(TARGETS clientMQTT
+	install(TARGETS qclientMQTT
 		EXPORT ${PROJECT_NAME}-config
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}
 		COMPONENT clientMQTT
 		)
 	install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/
-		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Esterv/${PROJECT_NAME}
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Esterv
 		COMPONENT clientMQTT
 		)
 
@@ -95,6 +96,7 @@ if (Qt6_FOUND)
 		${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
 		${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+		COMPONENT clientMQTT
 		)
 	export(EXPORT ${PROJECT_NAME}-config
 		FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
@@ -105,19 +107,22 @@ if (Qt6_FOUND)
 	set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL_VAR} CACHE INTERNAL "" )
 
 	if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-		set(CPACK_PACKAGE_CONTACT "estervtech")
-		include(CTest)
-		set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-v${SEMVER}-${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_VERSION}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}")
+		set(cpack_file_name "${PROJECT_NAME}-v${SEMVER}-${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_VERSION}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}")
 		if(NOT BUILD_SHARED_LIBS)
-			set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-static")
+			set(cpack_file_name "${cpack_file_name}-static")
 		endif(NOT BUILD_SHARED_LIBS)
+		set(CPACK_PACKAGE_FILE_NAME ${cpack_file_name})
 		include(CPack)
+		include(CPackIFW)
+		cpack_add_component(clientMQTT)
+		cpack_ifw_configure_component(clientMQTT LICENSES "License" ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE)
+		cpack_ifw_add_repository("Repo" URL "${REPO_URL}/packages/${CMAKE_SYSTEM_NAME}/" )
 	endif()
 	#if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-	#	add_subdirectory(tests)
+	#	include(CTest)
+	#    add_subdirectory(tests)
 	#endif()
 endif(Qt6_FOUND)
 if(BUILD_DOCS)
-	get_target_property(build_docs cmake_build_docs SOURCES)
-	include(${build_docs})
+	build_docs()
 endif()
