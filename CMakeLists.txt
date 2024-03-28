@@ -5,7 +5,7 @@ include(FetchContent)
 FetchContent_Declare(
 	ccommon
 	GIT_REPOSITORY https://github.com/EddyTheCo/Common.git
-	GIT_TAG use_IFW
+	GIT_TAG v0.3.0
 	)
 FetchContent_MakeAvailable(ccommon)
 version_from_git(
@@ -25,8 +25,8 @@ include(GNUInstallDirs)
 FetchContent_Declare(
 	QtIotaBlock
 	GIT_REPOSITORY https://github.com/EddyTheCo/Qblock-IOTA.git
-	GIT_TAG use_IFW
-	FIND_PACKAGE_ARGS 0.3 CONFIG
+	GIT_TAG v0.4.0
+	FIND_PACKAGE_ARGS 0.4 CONFIG
 	)
 FetchContent_MakeAvailable(QtIotaBlock)
 
