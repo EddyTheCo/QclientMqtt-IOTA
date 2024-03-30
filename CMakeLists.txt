@@ -78,9 +78,10 @@ if (Qt6_FOUND)
 		)
 
 	build_exports()
-	get_cmake_property(CPACK_COMPONENTS_ALL_VAR COMPONENTS)
-	list(REMOVE_ITEM CPACK_COMPONENTS_ALL_VAR "_install_html_docs_Mqtt" "_install_qch_docs_Mqtt")
-	set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL_VAR} CACHE INTERNAL "" )
+	##### Need it to be able to install qtmqtt component  #####
+	file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc/qtmqtt)
+	file(TOUCH "${CMAKE_BINARY_DIR}/doc/qtmqtt.qch")
+	#####                                                 #####
 
 	if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 		build_cpack()
